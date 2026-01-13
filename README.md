@@ -37,7 +37,7 @@ openssl rsa -in dns_update.key -pubout -out dns_update_pub.pem
 
 Configure your Hickory DNS server to accept signed updates for your zone.
 
-Add the following to your Hickory DNS configuration file (usually `/etc/hickory/dns.toml`):
+Add the following to your Hickory DNS configuration file (usually `/etc/named.toml`):
 
 ```toml
 [[zones]]
@@ -67,7 +67,7 @@ Ensure the user running the Hickory DNS daemon has read permissions on `/etc/hic
 
 ```bash
 cargo build --release
-sudo cp target/release/dns-updater /usr/local/bin/
+sudo cp target/release/whodis /usr/local/bin/
 
 ```
 
@@ -77,13 +77,13 @@ The tool attempts to auto-detect your IP address. You can also enforce specific 
 
 ```bash
 # Update both IPv4 and IPv6 (Auto-detect)
-dns-updater --zone dyn.lan --hostname laptop --server 192.168.1.53:53
+whodis --zone dyn.lan --hostname laptop.dyn.lan --server 192.168.1.53:53
 
 # Force IPv4 Only
-dns-updater --zone dyn.lan --hostname laptop --server 192.168.1.53:53 --mode v4-only
+whodis --zone dyn.lan --hostname laptop.dyn.lan --server 192.168.1.53:53 --mode v4-only
 
 # Manually set a specific IP (Auto-detection skipped)
-dns-updater --zone dyn.lan --hostname laptop --server 192.168.1.53:53 --ip 10.0.50.100
+whodis --zone dyn.lan --hostname laptop.dyn.lan --server 192.168.1.53:53 --ip 10.0.50.100
 
 ```
 
@@ -107,12 +107,12 @@ Create `/etc/systemd/system/dns-updater.service`:
 
 ```ini
 [Unit]
-Description=Hickory DNS Dynamic Update Client
-Documentation=https://github.com/your/repo
+Description=Whodis dynamic DNS update
+Documentation=https://github.com/killerfoxi/whodis
 
 [Service]
 Type=oneshot
-ExecStart=/usr/local/bin/dns-updater \
+ExecStart=/usr/local/bin/whodis \
     --zone dyn.lan. \
     --hostname %H.dyn.lan. \
     --server 192.168.1.53:53 \
