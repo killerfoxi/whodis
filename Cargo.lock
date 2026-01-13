@@ -1388,6 +1388,7 @@ dependencies = [
  "color-eyre",
  "futures",
  "hickory-client",
+ "hickory-proto",
  "local-ip-address",
  "rand",
  "rustls-pki-types",
